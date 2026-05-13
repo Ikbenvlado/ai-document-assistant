@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     chroma_persist_dir: str = "./data/chroma"
     upload_dir: str = "./data/uploads"
     frontend_url: str = "http://localhost:3000"
+    frontend_urls: str = ""
 
     default_chunk_size: int = 1000
     default_chunk_overlap: int = 200
@@ -31,6 +32,15 @@ class Settings(BaseSettings):
     demo_max_document_chars: int = 20_000
     demo_retriever_k: int = 3
     demo_llm_max_tokens: int = 600
+
+    def cors_origins(self) -> list[str]:
+        origins = {"http://localhost:3000"}
+        configured_urls = [self.frontend_url, *self.frontend_urls.split(",")]
+        for url in configured_urls:
+            origin = url.strip().rstrip("/")
+            if origin:
+                origins.add(origin)
+        return sorted(origins)
 
     def missing_ai_keys(self) -> list[str]:
         missing = []
