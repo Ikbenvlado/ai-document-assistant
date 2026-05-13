@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./data/documents.db"
     chroma_persist_dir: str = "./data/chroma"
     upload_dir: str = "./data/uploads"
+    frontend_url: str = "http://localhost:3000"
 
     default_chunk_size: int = 1000
     default_chunk_overlap: int = 200
