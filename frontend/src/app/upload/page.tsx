@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useToast } from "@/components/ui/Toast";
 import type { UsageStatus } from "@/lib/types";
+import { friendlyUploadError } from "@/lib/errors";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const UPLOAD_URL = `${API_BASE}/api/v1/documents/upload`;
@@ -127,9 +128,15 @@ export default function UploadPage() {
           setIsUploading(false);
           try {
             const err = JSON.parse(responseText);
-            toast(err.detail || "Upload failed", "error");
+            toast(
+              friendlyUploadError(err.detail || "Upload could not be completed."),
+              "error"
+            );
           } catch {
-            toast("Upload failed. Please try again.", "error");
+            toast(
+              "Upload could not be completed. Please try another PDF, TXT, or DOCX file.",
+              "error"
+            );
           }
         }
       };
@@ -145,7 +152,10 @@ export default function UploadPage() {
           .catch(() => {
             setIsUploading(false);
             setProgress(0);
-            toast(`Network error while uploading to ${UPLOAD_URL}`, "error");
+            toast(
+              "Upload connection failed. Please check your connection and try again.",
+              "error"
+            );
           });
         return;
       }
@@ -173,7 +183,10 @@ export default function UploadPage() {
           handleUploadResponse(response.status, responseText);
         } catch {
           setIsUploading(false);
-          toast(`Network error while uploading to ${UPLOAD_URL}`, "error");
+          toast(
+            "Upload connection failed. Please check your connection and try again.",
+            "error"
+          );
         }
       });
 

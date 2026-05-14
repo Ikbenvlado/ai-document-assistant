@@ -9,6 +9,7 @@ import { PageLoading } from "@/components/ui/LoadingSpinner";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/Toast";
+import { friendlySummaryError } from "@/lib/errors";
 
 export default function DocumentPage() {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,7 @@ export default function DocumentPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Failed to generate summary. Check that the backend is running.";
+          : "Summary could not be generated right now.";
       const isLimitError =
         message.toLowerCase().includes("limit") ||
         message.toLowerCase().includes("too many");
@@ -90,7 +91,7 @@ export default function DocumentPage() {
         );
         toast("Summary limit reached for the public demo", "info");
       } else {
-        toast(message, "error");
+        toast(friendlySummaryError(message), "error");
       }
     } finally {
       setSummaryLoading(false);
@@ -103,7 +104,7 @@ export default function DocumentPage() {
       toast("Document deleted", "success");
       router.push("/");
     } catch {
-      toast("Failed to delete document", "error");
+      toast("Document could not be deleted right now. Please try again.", "error");
     }
   };
 

@@ -24,7 +24,7 @@ export default function Home() {
       setDocs(data);
       setError(null);
     } catch {
-      setError("Failed to load documents. Is the backend running?");
+      setError("Documents could not be loaded right now. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ export default function Home() {
         setError(null);
       } catch {
         if (active) {
-          setError("Failed to load documents. Is the backend running?");
+          setError("Documents could not be loaded right now. Please try again.");
         }
       } finally {
         if (active) {
@@ -70,7 +70,7 @@ export default function Home() {
       setDocs((prev) => prev.filter((d) => d.id !== deleteTarget.id));
       toast(`"${deleteTarget.filename}" deleted`, "success");
     } catch {
-      toast("Failed to delete document", "error");
+      toast("Document could not be deleted right now. Please try again.", "error");
     } finally {
       setDeleteTarget(null);
     }

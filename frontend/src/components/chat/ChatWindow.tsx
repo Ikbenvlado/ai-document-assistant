@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { api } from "@/lib/api";
+import { friendlyChatError } from "@/lib/errors";
 
 interface Message {
   role: "user" | "assistant";
@@ -41,7 +42,11 @@ export function ChatWindow({
         { role: "assistant", content: data.answer, sources: data.sources },
       ]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to get answer.");
+      setError(
+        friendlyChatError(
+          err instanceof Error ? err.message : "Chat is unavailable right now."
+        )
+      );
     } finally {
       setLoading(false);
     }
