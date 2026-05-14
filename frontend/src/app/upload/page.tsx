@@ -8,9 +8,19 @@ import { useToast } from "@/components/ui/Toast";
 import type { UsageStatus } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const UPLOAD_URL = `${API_BASE}/api/v1/documents/upload`;
 const MAX_DEMO_FILE_SIZE_MB = 2;
 const MAX_DEMO_FILE_SIZE = MAX_DEMO_FILE_SIZE_MB * 1024 * 1024;
 const DAILY_UPLOAD_LIMIT = 2;
+
+async function uploadWithFetch(file: File): Promise<Response> {
+  const formData = new FormData();
+  formData.append("file", file);
+  return fetch(UPLOAD_URL, {
+    method: "POST",
+    body: formData,
+  });
+}
 
 export default function UploadPage() {
   const router = useRouter();
@@ -81,17 +91,11 @@ export default function UploadPage() {
       const formData = new FormData();
       formData.append("file", file);
 
-      xhr.upload.addEventListener("progress", (e) => {
-        if (e.lengthComputable) {
-          setProgress((e.loaded / e.total) * 100);
-        }
-      });
-
-      xhr.addEventListener("load", () => {
-        if (xhr.status === 201) {
+      const handleUploadResponse = (status: number, responseText: string) => {
+        if (status === 201) {
           toast("Document uploaded successfully", "success");
           router.push("/");
-        } else if (xhr.status === 413) {
+        } else if (status === 413) {
           setIsUploading(false);
           toast(
             `File too large. Maximum size is ${MAX_DEMO_FILE_SIZE_MB} MB for the public demo.`,
@@ -100,17 +104,34 @@ export default function UploadPage() {
         } else {
           setIsUploading(false);
           try {
-            const err = JSON.parse(xhr.responseText);
+            const err = JSON.parse(responseText);
             toast(err.detail || "Upload failed", "error");
           } catch {
             toast("Upload failed. Please try again.", "error");
           }
         }
+      };
+
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          setProgress((e.loaded / e.total) * 100);
+        }
       });
 
-      xhr.addEventListener("error", () => {
-        setIsUploading(false);
-        toast("Network error. Check that the backend is running.", "error");
+      xhr.addEventListener("load", () => {
+        handleUploadResponse(xhr.status, xhr.responseText);
+      });
+
+      xhr.addEventListener("error", async () => {
+        setProgress(0);
+        try {
+          const response = await uploadWithFetch(file);
+          const responseText = await response.text();
+          handleUploadResponse(response.status, responseText);
+        } catch {
+          setIsUploading(false);
+          toast(`Network error while uploading to ${UPLOAD_URL}`, "error");
+        }
       });
 
       xhr.addEventListener("abort", () => {
@@ -118,7 +139,7 @@ export default function UploadPage() {
         setProgress(0);
       });
 
-      xhr.open("POST", `${API_BASE}/api/v1/documents/upload`);
+      xhr.open("POST", UPLOAD_URL);
       xhr.send(formData);
     },
     [router, toast, uploadLimit?.reached]
