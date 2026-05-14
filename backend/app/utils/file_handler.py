@@ -1,5 +1,6 @@
 import os
 import uuid
+from io import BytesIO
 
 from fastapi import HTTPException, UploadFile
 
@@ -41,6 +42,30 @@ def validate_mime_type(content_type: str | None) -> None:
         )
 
 
+def validate_pdf_readable(content: bytes, ext: str) -> None:
+    if ext != ".pdf":
+        return
+
+    from pypdf import PdfReader
+    from pypdf.errors import FileNotDecryptedError, PdfReadError
+
+    try:
+        reader = PdfReader(BytesIO(content))
+        if reader.is_encrypted and reader.decrypt("") == 0:
+            raise HTTPException(
+                status_code=400,
+                detail="This PDF is password protected. Please upload an unlocked PDF.",
+            )
+        len(reader.pages)
+    except HTTPException:
+        raise
+    except (FileNotDecryptedError, PdfReadError):
+        raise HTTPException(
+            status_code=400,
+            detail="This PDF could not be read. Please upload an unlocked, valid PDF.",
+        )
+
+
 async def save_uploaded_file(file: UploadFile) -> tuple[str, str]:
     ext = os.path.splitext(file.filename)[1].lower()
     unique_name = f"{uuid.uuid4()}{ext}"
@@ -52,6 +77,7 @@ async def save_uploaded_file(file: UploadFile) -> tuple[str, str]:
 
     validate_file_size(content)
     validate_mime_type(file.content_type)
+    validate_pdf_readable(content, ext)
 
     with open(file_path, "wb") as f:
         f.write(content)
