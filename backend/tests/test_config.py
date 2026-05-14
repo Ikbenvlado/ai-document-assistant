@@ -25,3 +25,11 @@ def test_cors_origins_supports_multiple_frontend_domains():
         "https://frontend-theta-nine-69.vercel.app",
         "https://www.ai-docu.fun",
     ]
+
+
+def test_demo_limit_exemption_supports_exact_ips_and_cidr_ranges():
+    settings = Settings(demo_limit_exempt_ips="203.0.113.10, 198.51.100.0/24")
+
+    assert settings.is_demo_limit_exempt("203.0.113.10") is True
+    assert settings.is_demo_limit_exempt("198.51.100.42") is True
+    assert settings.is_demo_limit_exempt("192.0.2.10") is False

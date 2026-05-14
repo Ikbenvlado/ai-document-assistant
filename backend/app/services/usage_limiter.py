@@ -3,6 +3,7 @@ from datetime import date, datetime, timezone
 from fastapi import HTTPException, Request
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.models.document import UsageLedger
 
 GLOBAL_SCOPE = "__global__"
@@ -33,6 +34,8 @@ def check_and_increment_usage(
         per_visitor_limit = per_ip_limit
     if visitor_key is None or per_visitor_limit is None:
         raise ValueError("visitor_key and per_visitor_limit are required")
+    if settings.is_demo_limit_exempt(visitor_key):
+        return
 
     today = date.today()
     global_row = _get_or_create_row(db, today, action, GLOBAL_SCOPE)
@@ -56,6 +59,14 @@ def get_usage_status(
     global_limit: int,
     per_visitor_limit: int,
 ) -> dict[str, int | bool]:
+    if settings.is_demo_limit_exempt(visitor_key):
+        return {
+            "used": 0,
+            "limit": per_visitor_limit,
+            "remaining": per_visitor_limit,
+            "reached": False,
+        }
+
     today = date.today()
     global_count = _get_count(db, today, action, GLOBAL_SCOPE)
     visitor_count = _get_count(db, today, action, visitor_key)

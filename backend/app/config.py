@@ -1,3 +1,5 @@
+from ipaddress import ip_address, ip_network
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -32,6 +34,7 @@ class Settings(BaseSettings):
     demo_max_document_chars: int = 20_000
     demo_retriever_k: int = 3
     demo_llm_max_tokens: int = 600
+    demo_limit_exempt_ips: str = ""
 
     def cors_origins(self) -> list[str]:
         origins = {"http://localhost:3000"}
@@ -41,6 +44,20 @@ class Settings(BaseSettings):
             if origin:
                 origins.add(origin)
         return sorted(origins)
+
+    def is_demo_limit_exempt(self, visitor_key: str) -> bool:
+        for raw_entry in self.demo_limit_exempt_ips.split(","):
+            entry = raw_entry.strip()
+            if not entry:
+                continue
+            if entry == visitor_key:
+                return True
+            try:
+                if ip_address(visitor_key) in ip_network(entry, strict=False):
+                    return True
+            except ValueError:
+                continue
+        return False
 
     def missing_ai_keys(self) -> list[str]:
         missing = []

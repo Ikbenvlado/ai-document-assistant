@@ -7,6 +7,7 @@ from app.services.usage_limiter import (
     get_usage_status,
     get_visitor_key,
 )
+from app.config import settings
 
 
 def test_check_and_increment_usage_allows_until_limits(db_session):
@@ -69,6 +70,21 @@ def test_check_and_increment_usage_blocks_global_limit(db_session):
 
     assert exc.value.status_code == 429
     assert "Daily demo limit reached" in exc.value.detail
+
+
+def test_check_and_increment_usage_skips_daily_limits_for_exempt_ip(
+    db_session, monkeypatch
+):
+    monkeypatch.setattr(settings, "demo_limit_exempt_ips", "203.0.113.10")
+
+    for _ in range(3):
+        check_and_increment_usage(
+            db=db_session,
+            action="upload",
+            visitor_key="203.0.113.10",
+            global_limit=1,
+            per_visitor_limit=1,
+        )
 
 
 class FakeRequest:
@@ -135,3 +151,22 @@ def test_get_usage_status_marks_reached_when_visitor_limit_is_used(db_session):
     assert status["used"] == 2
     assert status["remaining"] == 0
     assert status["reached"] is True
+
+
+def test_get_usage_status_reports_available_for_exempt_ip(db_session, monkeypatch):
+    monkeypatch.setattr(settings, "demo_limit_exempt_ips", "203.0.113.10")
+
+    status = get_usage_status(
+        db=db_session,
+        action="upload",
+        visitor_key="203.0.113.10",
+        global_limit=1,
+        per_visitor_limit=2,
+    )
+
+    assert status == {
+        "used": 0,
+        "limit": 2,
+        "remaining": 2,
+        "reached": False,
+    }
