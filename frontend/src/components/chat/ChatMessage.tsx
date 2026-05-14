@@ -12,7 +12,7 @@ export function ChatMessage({
       <div
         className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
           role === "user"
-            ? "bg-[var(--color-ink)] text-white"
+            ? "bg-[var(--color-button)] text-[var(--color-button-ink)]"
             : "bg-[var(--color-background)] text-[var(--color-ink)] border border-[var(--color-border)]"
         }`}
       >

@@ -16,6 +16,14 @@ const geistMono = Geist_Mono({
 });
 
 const googleAnalyticsId = "G-6845E34LXC";
+const themeScript = `
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  } catch {}
+`;
 
 export const metadata: Metadata = {
   title: "AI Document Assistant",
@@ -31,8 +39,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-[var(--color-background)] text-[var(--color-ink)]">
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <ToastProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

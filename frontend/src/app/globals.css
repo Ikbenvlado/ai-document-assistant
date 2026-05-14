@@ -13,8 +13,32 @@
   --color-success-bg: #edf7f0;
   --color-error: #c73e3a;
   --color-error-bg: #fef2f2;
+  --color-button: #1b1b2f;
+  --color-button-ink: #ffffff;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-background: #111112;
+  --color-surface: #18181b;
+  --color-ink: #f4f0e8;
+  --color-ink-muted: #aaa39a;
+  --color-accent: #b77c2f;
+  --color-accent-light: #2b2116;
+  --color-accent-dark: #d49a4a;
+  --color-border: #2c2b29;
+  --color-success: #7fd1aa;
+  --color-success-bg: #13241c;
+  --color-error: #f28f88;
+  --color-error-bg: #2a1716;
+  --color-button: #f4f0e8;
+  --color-button-ink: #111112;
 }
 
 body {

@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 ? "bg-[var(--color-success-bg)] text-[var(--color-success)]"
                 : t.type === "error"
                   ? "bg-[var(--color-error-bg)] text-[var(--color-error)]"
-                  : "bg-[var(--color-ink)] text-white"
+                  : "bg-[var(--color-button)] text-[var(--color-button-ink)]"
             }`}
           >
             {t.type === "success" && (

@@ -89,7 +89,7 @@ export default function Home() {
         </div>
         <Link
           href="/upload"
-          className="px-4 py-2 rounded-lg bg-[var(--color-ink)] text-white text-sm font-medium hover:opacity-90 transition-all duration-200 hover:shadow-md"
+          className="px-4 py-2 rounded-lg bg-[var(--color-button)] text-[var(--color-button-ink)] text-sm font-medium hover:opacity-90 transition-all duration-200 hover:shadow-md"
         >
           Upload New
         </Link>

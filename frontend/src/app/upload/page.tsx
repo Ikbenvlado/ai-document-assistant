@@ -247,7 +247,7 @@ export default function UploadPage() {
                 e.stopPropagation();
                 router.push("/");
               }}
-              className="px-5 py-2.5 rounded-lg bg-[var(--color-ink)] text-white text-sm font-medium hover:opacity-90 transition-all"
+              className="px-5 py-2.5 rounded-lg bg-[var(--color-button)] text-[var(--color-button-ink)] text-sm font-medium hover:opacity-90 transition-all"
             >
               View Documents
             </button>

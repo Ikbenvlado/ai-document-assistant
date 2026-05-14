@@ -18,6 +18,9 @@ export default function DocumentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryLimitNotice, setSummaryLimitNotice] = useState<string | null>(
+    null
+  );
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const loadDoc = useCallback(async () => {
@@ -67,17 +70,28 @@ export default function DocumentPage() {
 
   const handleSummarize = async () => {
     setSummaryLoading(true);
+    setSummaryLimitNotice(null);
     try {
       const data = await api.documents.summarize(id);
       setDoc((prev) => (prev ? { ...prev, summary: data.summary } : prev));
       toast("Summary generated", "success");
     } catch (err) {
-      toast(
+      const message =
         err instanceof Error
           ? err.message
-          : "Failed to generate summary. Check that the backend is running.",
-        "error"
-      );
+          : "Failed to generate summary. Check that the backend is running.";
+      const isLimitError =
+        message.toLowerCase().includes("limit") ||
+        message.toLowerCase().includes("too many");
+
+      if (isLimitError) {
+        setSummaryLimitNotice(
+          "The public demo has reached its summary limit for now. You can still read the document and use chat if your chat limit is available."
+        );
+        toast("Summary limit reached for the public demo", "info");
+      } else {
+        toast(message, "error");
+      }
     } finally {
       setSummaryLoading(false);
     }
@@ -160,6 +174,35 @@ export default function DocumentPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
+              {summaryLimitNotice && (
+                <div className="w-full rounded-xl border border-[var(--color-accent)]/25 bg-[var(--color-accent-light)] p-4 text-left animate-fade-in">
+                  <div className="flex items-start gap-3">
+                    <span className="w-8 h-8 rounded-lg bg-[var(--color-surface)] text-[var(--color-accent)] flex items-center justify-center shrink-0">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.8}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 6v6l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-semibold text-[var(--color-ink)]">
+                        Summary limit reached
+                      </h3>
+                      <p className="text-xs text-[var(--color-ink-muted)] leading-relaxed mt-1">
+                        {summaryLimitNotice}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
               <p className="text-sm text-[var(--color-ink-muted)]/50">
                 Generate an AI-powered summary of this document.
               </p>
