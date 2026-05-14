@@ -9,6 +9,8 @@ from app.config import settings
 ALLOWED_EXTENSIONS = {".pdf", ".txt"}
 ALLOWED_MIME_TYPES = {
     "application/pdf",
+    "application/octet-stream",
+    "application/x-pdf",
     "text/plain",
 }
 
@@ -34,7 +36,11 @@ def validate_file_size(content: bytes) -> None:
         )
 
 
-def validate_mime_type(content_type: str | None) -> None:
+def validate_mime_type(content_type: str | None, ext: str) -> None:
+    if not content_type:
+        return
+    if content_type in ALLOWED_MIME_TYPES and ext in ALLOWED_EXTENSIONS:
+        return
     if content_type and content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(
             status_code=400,
@@ -76,7 +82,7 @@ async def save_uploaded_file(file: UploadFile) -> tuple[str, str]:
     content = await file.read()
 
     validate_file_size(content)
-    validate_mime_type(file.content_type)
+    validate_mime_type(file.content_type, ext)
     validate_pdf_readable(content, ext)
 
     with open(file_path, "wb") as f:

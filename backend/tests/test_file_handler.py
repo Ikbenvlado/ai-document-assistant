@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from pypdf import PdfWriter
 
 from app.utils.file_handler import validate_pdf_readable
+from app.utils.file_handler import validate_mime_type
 
 
 def _pdf_bytes(encrypted: bool = False) -> bytes:
@@ -31,3 +32,7 @@ def test_validate_pdf_readable_rejects_password_protected_pdf():
 
 def test_validate_pdf_readable_ignores_non_pdf_files():
     validate_pdf_readable(b"plain text", ".txt")
+
+
+def test_validate_mime_type_accepts_mobile_octet_stream_for_supported_extension():
+    validate_mime_type("application/octet-stream", ".pdf")

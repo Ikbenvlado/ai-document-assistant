@@ -32,6 +32,11 @@ async function uploadWithFetch(file: File): Promise<Response> {
   });
 }
 
+function hasSupportedExtension(fileName: string): boolean {
+  const lowerName = fileName.toLowerCase();
+  return lowerName.endsWith(".pdf") || lowerName.endsWith(".txt");
+}
+
 export default function UploadPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -79,7 +84,11 @@ export default function UploadPage() {
       }
 
       const validTypes = ["application/pdf", "text/plain"];
-      if (!validTypes.includes(file.type) && file.type !== "") {
+      if (
+        !hasSupportedExtension(file.name) &&
+        !validTypes.includes(file.type) &&
+        file.type !== ""
+      ) {
         toast("Only PDF and TXT files are supported", "error");
         return;
       }
