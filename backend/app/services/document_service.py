@@ -77,12 +77,27 @@ def extract_text(file_path: str, file_type: str) -> str:
     if file_type == "txt":
         with open(file_path, "r", encoding="utf-8") as f:
             return f.read()
+    if file_type == "docx":
+        return _extract_docx_text(file_path)
 
     from langchain_community.document_loaders import PyPDFLoader
 
     loader = PyPDFLoader(file_path)
     pages = loader.load()
     return "\n\n".join(page.page_content for page in pages)
+
+
+def _extract_docx_text(file_path: str) -> str:
+    from docx import Document as DocxDocument
+
+    document = DocxDocument(file_path)
+    chunks = [paragraph.text for paragraph in document.paragraphs if paragraph.text]
+    for table in document.tables:
+        for row in table.rows:
+            cells = [cell.text.strip() for cell in row.cells if cell.text.strip()]
+            if cells:
+                chunks.append(" | ".join(cells))
+    return "\n\n".join(chunks)
 
 
 def _cleanup_file(file_path: str) -> None:

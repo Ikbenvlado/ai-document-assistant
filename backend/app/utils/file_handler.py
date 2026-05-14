@@ -6,13 +6,15 @@ from fastapi import HTTPException, UploadFile
 
 from app.config import settings
 
-ALLOWED_EXTENSIONS = {".pdf", ".txt"}
+ALLOWED_EXTENSIONS = {".pdf", ".txt", ".docx"}
 ALLOWED_MIME_TYPES = {
     "application/pdf",
     "application/octet-stream",
     "application/x-pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "text/plain",
 }
+ALLOWED_FILE_TYPES_LABEL = ".pdf, .txt, .docx"
 
 
 def validate_file_type(filename: str | None) -> None:
@@ -23,7 +25,7 @@ def validate_file_type(filename: str | None) -> None:
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file type '{ext}'. Allowed: .pdf, .txt",
+            detail=f"Unsupported file type '{ext}'. Allowed: {ALLOWED_FILE_TYPES_LABEL}",
         )
 
 
@@ -44,7 +46,7 @@ def validate_mime_type(content_type: str | None, ext: str) -> None:
     if content_type and content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file format. Allowed: PDF, TXT",
+            detail=f"Unsupported file format. Allowed: PDF, TXT, DOCX",
         )
 
 

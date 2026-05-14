@@ -34,7 +34,11 @@ async function uploadWithFetch(file: File): Promise<Response> {
 
 function hasSupportedExtension(fileName: string): boolean {
   const lowerName = fileName.toLowerCase();
-  return lowerName.endsWith(".pdf") || lowerName.endsWith(".txt");
+  return (
+    lowerName.endsWith(".pdf") ||
+    lowerName.endsWith(".txt") ||
+    lowerName.endsWith(".docx")
+  );
 }
 
 export default function UploadPage() {
@@ -83,13 +87,17 @@ export default function UploadPage() {
         return;
       }
 
-      const validTypes = ["application/pdf", "text/plain"];
+      const validTypes = [
+        "application/pdf",
+        "text/plain",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
       if (
         !hasSupportedExtension(file.name) &&
         !validTypes.includes(file.type) &&
         file.type !== ""
       ) {
-        toast("Only PDF and TXT files are supported", "error");
+        toast("Only PDF, TXT and DOCX files are supported", "error");
         return;
       }
 
@@ -278,7 +286,7 @@ export default function UploadPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".pdf,.txt"
+          accept=".pdf,.txt,.docx"
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];

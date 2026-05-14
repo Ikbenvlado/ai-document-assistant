@@ -36,3 +36,10 @@ def test_validate_pdf_readable_ignores_non_pdf_files():
 
 def test_validate_mime_type_accepts_mobile_octet_stream_for_supported_extension():
     validate_mime_type("application/octet-stream", ".pdf")
+
+
+def test_validate_mime_type_accepts_docx_format():
+    validate_mime_type(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ".docx",
+    )
