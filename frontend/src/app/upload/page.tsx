@@ -212,6 +212,16 @@ export default function UploadPage() {
           Public demo: max {DAILY_UPLOAD_LIMIT} uploads per visitor per day,
           files up to {MAX_DEMO_FILE_SIZE_MB} MB
         </p>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {["PDF", "TXT", "DOCX"].map((type) => (
+            <span
+              key={type}
+              className="px-2.5 py-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-ink-muted)]"
+            >
+              {type}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div
@@ -276,7 +286,8 @@ export default function UploadPage() {
               Drop your document here
             </p>
             <p className="text-[var(--color-ink-muted)]/50 text-sm">
-              or click to browse &middot; max {MAX_DEMO_FILE_SIZE_MB} MB &middot;{" "}
+              or click to browse &middot; PDF, TXT, DOCX &middot; max{" "}
+              {MAX_DEMO_FILE_SIZE_MB} MB &middot;{" "}
               {uploadLimit
                 ? `${uploadLimit.remaining} upload${uploadLimit.remaining === 1 ? "" : "s"} left today`
                 : `${DAILY_UPLOAD_LIMIT} uploads/day`}
