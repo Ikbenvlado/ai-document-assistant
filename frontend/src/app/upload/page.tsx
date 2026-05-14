@@ -13,6 +13,16 @@ const MAX_DEMO_FILE_SIZE_MB = 2;
 const MAX_DEMO_FILE_SIZE = MAX_DEMO_FILE_SIZE_MB * 1024 * 1024;
 const DAILY_UPLOAD_LIMIT = 2;
 
+function shouldUseSimpleUpload(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  return (
+    window.matchMedia("(pointer: coarse)").matches ||
+    navigator.maxTouchPoints > 0
+  );
+}
+
 async function uploadWithFetch(file: File): Promise<Response> {
   const formData = new FormData();
   formData.append("file", file);
@@ -86,11 +96,6 @@ export default function UploadPage() {
       setIsUploading(true);
       setProgress(0);
 
-      const xhr = new XMLHttpRequest();
-      xhrRef.current = xhr;
-      const formData = new FormData();
-      formData.append("file", file);
-
       const handleUploadResponse = (status: number, responseText: string) => {
         if (status === 201) {
           toast("Document uploaded successfully", "success");
@@ -111,6 +116,27 @@ export default function UploadPage() {
           }
         }
       };
+
+      if (shouldUseSimpleUpload()) {
+        setProgress(40);
+        uploadWithFetch(file)
+          .then(async (response) => {
+            const responseText = await response.text();
+            setProgress(100);
+            handleUploadResponse(response.status, responseText);
+          })
+          .catch(() => {
+            setIsUploading(false);
+            setProgress(0);
+            toast(`Network error while uploading to ${UPLOAD_URL}`, "error");
+          });
+        return;
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhrRef.current = xhr;
+      const formData = new FormData();
+      formData.append("file", file);
 
       xhr.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable) {
