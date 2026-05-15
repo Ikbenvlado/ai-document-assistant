@@ -57,6 +57,22 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const hasProcessing = docs.some((d) => d.status === "processing");
+    if (!hasProcessing) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const data = await api.documents.list();
+        setDocs(data);
+      } catch {
+        // silently ignore polling errors
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [docs]);
+
   const fetchDocs = useCallback(async () => {
     setLoading(true);
     setError(null);
