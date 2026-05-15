@@ -5,6 +5,8 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { ToastProvider } from "@/components/ui/Toast";
 
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=t||(d?'dark':'light');}catch(e){}})();`;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -16,14 +18,6 @@ const geistMono = Geist_Mono({
 });
 
 const googleAnalyticsId = "G-6845E34LXC";
-const themeScript = `
-  try {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-    document.documentElement.dataset.theme = theme;
-  } catch {}
-`;
 
 export const metadata: Metadata = {
   title: "AI Document Assistant",
@@ -45,10 +39,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-full flex flex-col bg-[var(--color-background)] text-[var(--color-ink)]">
-        <Script id="theme-init" strategy="beforeInteractive">
-          {themeScript}
-        </Script>
         <ToastProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
