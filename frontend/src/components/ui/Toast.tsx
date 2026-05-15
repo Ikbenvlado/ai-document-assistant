@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ toast: addToast }}>
       {children}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm">
+      <div className="fixed bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-50 flex flex-col gap-2">
         {toasts.map((t) => (
           <div
             key={t.id}
@@ -68,7 +68,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
-            {t.message}
+            <span className="break-words min-w-0">{t.message}</span>
           </div>
         ))}
       </div>
