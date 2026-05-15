@@ -28,6 +28,10 @@ const themeScript = `
 export const metadata: Metadata = {
   title: "AI Document Assistant",
   description: "Upload, summarize, and chat with your documents",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
