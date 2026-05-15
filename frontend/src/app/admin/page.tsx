@@ -119,7 +119,7 @@ export default function AdminPage() {
               onClick={logout}
               className="text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-error)] transition-colors"
             >
-              Clear password
+              Log out
             </button>
           </div>
 
