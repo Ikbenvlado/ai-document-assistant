@@ -92,7 +92,7 @@ export default function Home() {
     }
   };
 
-  if (loading) return <PageLoading />;
+  if (loading) return null;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
