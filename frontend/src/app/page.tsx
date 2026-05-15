@@ -107,7 +107,7 @@ export default function Home() {
       )}
 
       {!error && docs.length > 0 && (
-        <div className="grid gap-3">
+        <div className="grid gap-3 min-w-0 overflow-hidden">
           {docs.map((doc, i) => (
             <DocumentCard
               key={doc.id}

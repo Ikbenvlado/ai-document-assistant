@@ -20,7 +20,7 @@ export function DocumentCard({
 
   return (
     <div
-      className={`border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-accent)]/30 hover:shadow-md transition-all duration-200 bg-[var(--color-surface)] ${className}`}
+      className={`border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-accent)]/30 hover:shadow-md transition-all duration-200 bg-[var(--color-surface)] overflow-hidden min-w-0 w-full ${className}`}
     >
       <div className="flex items-start justify-between gap-4">
         <Link href={`/documents/${doc.id}`} className="flex-1 min-w-0">
