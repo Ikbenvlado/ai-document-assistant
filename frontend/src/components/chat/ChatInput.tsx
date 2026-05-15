@@ -55,7 +55,7 @@ export function ChatInput({
       <button
         onClick={handleSend}
         disabled={disabled || !value.trim()}
-        className="h-11 shrink-0 px-4 rounded-xl bg-[var(--color-button)] text-[var(--color-button-ink)] text-sm font-medium hover:opacity-90 disabled:opacity-30 transition-all"
+        className="h-11 shrink-0 px-4 rounded-xl bg-[var(--color-button)] text-[var(--color-button-ink)] text-sm font-medium hover:opacity-80 active:scale-95 disabled:opacity-30 transition-all"
       >
         Send
       </button>

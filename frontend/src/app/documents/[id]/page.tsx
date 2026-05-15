@@ -122,9 +122,9 @@ export default function DocumentPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12 animate-fade-in">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{doc.filename}</h1>
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{doc.filename}</h1>
           <p className="text-sm text-[var(--color-ink-muted)] mt-1">
             {doc.file_type.toUpperCase()} &middot;{" "}
             {new Date(doc.created_at).toLocaleDateString("en-US", {
@@ -138,7 +138,7 @@ export default function DocumentPage() {
         <button
           onClick={() => setShowDeleteConfirm(true)}
           disabled={isProcessing}
-          className="px-4 py-2 rounded-lg text-sm text-[var(--color-error)] hover:bg-[var(--color-error-bg)] transition-colors font-medium"
+          className="shrink-0 px-4 py-2 rounded-lg text-sm text-[var(--color-error)] hover:bg-[var(--color-error-bg)] active:scale-95 transition-all font-medium disabled:opacity-40"
         >
           Delete
         </button>
@@ -159,7 +159,7 @@ export default function DocumentPage() {
               </p>
               <button
                 onClick={fetchDoc}
-                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] transition-all duration-200"
+                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] active:scale-95 transition-all duration-200"
               >
                 Refresh
               </button>
@@ -210,7 +210,7 @@ export default function DocumentPage() {
               <button
                 onClick={handleSummarize}
                 disabled={summaryLoading}
-                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] disabled:opacity-50 transition-all duration-200 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center gap-2"
               >
                 {summaryLoading ? (
                   <>
