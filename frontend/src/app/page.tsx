@@ -100,7 +100,7 @@ export default function Home() {
       {!error && docs.length === 0 && (
         <EmptyState
           title="No documents yet"
-          description="Upload your first PDF or TXT document to get started."
+          description="Upload your first PDF, TXT, or DOCX document to get started."
           actionLabel="Upload Document"
           actionHref="/upload"
         />
