@@ -210,7 +210,7 @@ export default function DocumentPage() {
               <button
                 onClick={handleSummarize}
                 disabled={summaryLoading}
-                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-dark)] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-none active:scale-95 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none transition-all duration-150 flex items-center gap-2 cursor-pointer"
               >
                 {summaryLoading ? (
                   <>
