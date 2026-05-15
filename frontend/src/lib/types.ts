@@ -35,3 +35,35 @@ export interface UsageStatus {
 export interface DemoLimitsResponse {
   upload: UsageStatus;
 }
+
+export interface AdminActionStats {
+  action: "upload" | "delete" | "chat" | "summary";
+  today: number;
+  total: number;
+}
+
+export interface AdminStatusStats {
+  status: string;
+  count: number;
+}
+
+export interface AdminFileTypeStats {
+  file_type: string;
+  count: number;
+}
+
+export interface AdminDailyUsage {
+  usage_date: string;
+  upload: number;
+  delete: number;
+  chat: number;
+  summary: number;
+}
+
+export interface AdminStatsResponse {
+  documents_total: number;
+  actions: AdminActionStats[];
+  statuses: AdminStatusStats[];
+  file_types: AdminFileTypeStats[];
+  recent_usage: AdminDailyUsage[];
+}

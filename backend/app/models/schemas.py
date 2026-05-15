@@ -45,3 +45,35 @@ class UsageStatus(BaseModel):
 
 class DemoLimitsResponse(BaseModel):
     upload: UsageStatus
+
+
+class AdminActionStats(BaseModel):
+    action: str
+    today: int
+    total: int
+
+
+class AdminStatusStats(BaseModel):
+    status: str
+    count: int
+
+
+class AdminFileTypeStats(BaseModel):
+    file_type: str
+    count: int
+
+
+class AdminDailyUsage(BaseModel):
+    usage_date: str
+    upload: int = 0
+    delete: int = 0
+    chat: int = 0
+    summary: int = 0
+
+
+class AdminStatsResponse(BaseModel):
+    documents_total: int
+    actions: list[AdminActionStats]
+    statuses: list[AdminStatusStats]
+    file_types: list[AdminFileTypeStats]
+    recent_usage: list[AdminDailyUsage]

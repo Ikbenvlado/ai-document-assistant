@@ -9,7 +9,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from app.config import settings
 from app.db import Base, engine
 from app.limiter import limiter
-from app.routes import chat, documents
+from app.routes import admin, chat, documents
 
 logging.basicConfig(
     level=logging.INFO,
@@ -62,6 +62,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.include_router(documents.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
+app.include_router(admin.router, prefix="/api/v1")
 
 
 @app.on_event("startup")

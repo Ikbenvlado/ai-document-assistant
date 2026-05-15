@@ -52,6 +52,16 @@ def check_and_increment_usage(
     db.commit()
 
 
+def record_usage_event(db: Session, action: str, visitor_key: str) -> None:
+    today = date.today()
+    now = datetime.now(timezone.utc)
+    for scope in (GLOBAL_SCOPE, visitor_key):
+        row = _get_or_create_row(db, today, action, scope)
+        row.count += 1
+        row.updated_at = now
+    db.commit()
+
+
 def get_usage_status(
     db: Session,
     action: str,

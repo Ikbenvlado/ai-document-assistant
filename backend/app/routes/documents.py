@@ -21,6 +21,7 @@ from app.services.usage_limiter import (
     check_and_increment_usage,
     get_usage_status,
     get_visitor_key,
+    record_usage_event,
 )
 from app.services.vector_store import delete_document_vectors
 from app.utils.file_handler import save_uploaded_file, validate_file_type, remove_file
@@ -83,7 +84,11 @@ def get_document(document_id: str, db: Session = Depends(get_db)):
 
 
 @router.delete("/{document_id}", response_model=DeleteResponse)
-def delete_document(document_id: str, db: Session = Depends(get_db)):
+def delete_document(
+    request: Request,
+    document_id: str,
+    db: Session = Depends(get_db),
+):
     doc = db.query(Document).filter(Document.id == document_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
@@ -96,6 +101,7 @@ def delete_document(document_id: str, db: Session = Depends(get_db)):
 
     db.delete(doc)
     db.commit()
+    record_usage_event(db, "delete", get_visitor_key(request))
 
     logger.info("Document deleted: %s", document_id)
     return {"message": "Document deleted"}

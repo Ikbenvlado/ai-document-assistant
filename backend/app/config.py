@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     upload_dir: str = "./data/uploads"
     frontend_url: str = "http://localhost:3000"
     frontend_urls: str = ""
+    admin_password: str = ""
 
     default_chunk_size: int = 1000
     default_chunk_overlap: int = 200
