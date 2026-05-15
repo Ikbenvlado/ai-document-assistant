@@ -20,7 +20,7 @@ export function ConfirmDialog({
       <div className="absolute inset-0 bg-black/20" onClick={onCancel} />
       <div className="relative bg-[var(--color-surface)] rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4 animate-fade-in border border-[var(--color-border)]">
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-[var(--color-ink-muted)] mb-6">{message}</p>
+        <p className="text-sm text-[var(--color-ink-muted)] mb-6 break-words">{message}</p>
         <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
